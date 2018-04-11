@@ -1,0 +1,35 @@
+{
+  "name": "ganache-sandbox",
+  "version": "0.1.0",
+  "description": "Utility for creating a sandbox with contracts for testing purposes",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "test:build": "docker build --tag ganache_sandbox_tests --file ./tests/Dockerfile .",
+    "pretest": "npm run test:build",
+    "pretest-with-coverage": "npm run test:build",
+    "test": "docker run -e WITH_COVERAGE=0 -it ganache_sandbox_tests",
+    "test-with-coverage": "docker run -e WITH_COVERAGE=1 -it ganache_sandbox_tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pandoraboxchain/ganache-sandbox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pandoraboxchain/ganache-sandbox/issues"
+  },
+  "homepage": "https://github.com/pandoraboxchain/pyrrha-js",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "fs-extra": "^5.0.0",
+    "ganache-cli": "^7.0.0-beta.0",
+    "truffle-core": "^4.1.5",
+    "web3": "1.0.0-beta.33"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  },
+  "sideEffects": false,
+  "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
+  "license": "MIT"
+}
