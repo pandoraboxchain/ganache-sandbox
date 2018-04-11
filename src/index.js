@@ -241,7 +241,7 @@ class GanacheNode extends EventEmitter {
 
             Migrate.run(this._config.with({
                 logger: {
-                    log: (text, addresses) => {
+                    log: text => {
                         text = String(text).trim();
 
                         this._extract.forEach(name => {
