@@ -2,10 +2,8 @@
 
 const path = require('path');
 const { expect } = require('chai');
-const {
-    providers: {
-        WebsocketProvider
-    } } = require('web3');
+const Web3 = require('web3');
+const { providers: { WebsocketProvider } } = Web3;
 const GanacheNode = require('../../src');
 
 describe('Ganache sandbox tests:', () => {
@@ -21,8 +19,12 @@ describe('Ganache sandbox tests:', () => {
 
     after(done => server.close(done));
 
-    it('Should be a constructor', () => {
+    it('GanacheNode should be a function', () => {
         expect(GanacheNode).to.be.a('function');
+    });
+
+    it('#server.close should be a function', () => {
+        expect(server.close).to.be.a('function');
     });
 
     it('#server should be an instanceof Promise', () => {
@@ -41,8 +43,21 @@ describe('Ganache sandbox tests:', () => {
         expect(node.addresses).to.be.an.an.instanceOf(Promise);
     });
 
+    it('#web3 should be an instanceof Promise', () => {
+        expect(node.web3).to.be.an.an.instanceOf(Promise);
+    });
+
+    it('#web3 should be resolved to the instanceof Web3', async () => {
+        const web3 = await node.web3;
+        expect(web3).to.be.an.an.instanceOf(Web3);
+    });
+
     it('#publisher should be an instanceof Promise', () => {
         expect(node.publisher).to.be.an.instanceOf(Promise);
+    });
+
+    it('#network should be a string', () => {
+        expect(node.network).to.be.a('string');
     });
 
     it('#contracts should be resolved to the object with appropriate contracts', async () => {
