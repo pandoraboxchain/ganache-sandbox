@@ -5,7 +5,7 @@ Utility for creating a sandbox with contracts for testing purposes
 
 ## Installing
 ```sh
-npm i --save ganache-sandbox@https://github.com/pandoraboxchain/ganache-sandbox.git#v0.1.0
+npm i --save ganache-sandbox@https://github.com/pandoraboxchain/ganache-sandbox.git#v0.1.1
 ```
 
 ## Usage
