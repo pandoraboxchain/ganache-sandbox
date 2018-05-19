@@ -1,6 +1,6 @@
 {
   "name": "ganache-sandbox",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Utility for creating a sandbox with contracts for testing purposes",
   "private": true,
   "main": "src/index.js",

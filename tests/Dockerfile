@@ -18,7 +18,7 @@ RUN npm i --silent && npm i \
         @babel/polyfill@7.0.0-beta.47 \
         @babel/preset-env@7.0.0-beta.47 \
         @babel/register@7.0.0-beta.47 \
-        zeppelin-solidity \
+        openzeppelin-solidity \
         mocha \
         mocha-lcov-reporter \
         chai \

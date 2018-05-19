@@ -68,6 +68,7 @@ class GanacheNode extends EventEmitter {
     constructor(options = {}) {
         super();
         this._basePath = options.path || path.join(__dirname, '.');
+        this._copyPaths = options.copy || [];
         this._extract = options.extract || [];
         this._logServer = options.log || false;
         this._port = ganachePort++;
@@ -132,8 +133,11 @@ class GanacheNode extends EventEmitter {
         await fs.copy(path.join(this._basePath, 'truffle-config.js'), path.join(tempDir, 'truffle-config.js'));
         await fs.copy(path.join(this._basePath, 'contracts'), path.join(tempDir, 'contracts'));
         await fs.copy(path.join(this._basePath, 'migrations'), path.join(tempDir, 'migrations'));
-        await fs.copy(path.join(this._basePath, 'node_modules', 'zeppelin-solidity'), path.join(tempDir, 'node_modules', 'zeppelin-solidity'));
-        
+
+        // Copy additional paths to the sadndbox
+        let copies = this._copyPaths.map(p => fs.copy(path.join(this._basePath, p), path.join(tempDir, p)));
+        await Promise.all(copies);
+
         // Create truffle config related to sandbox
         this._config = Config.load(path.join(tempDir, 'truffle.js'), {
             reset: true

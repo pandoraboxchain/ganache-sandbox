@@ -9,8 +9,11 @@ const GanacheNode = require('../../src');
 describe('Ganache sandbox tests:', () => {
 
     const contractsPath = path.join(__dirname, '../../');
+    const copy = [
+        'node_modules/openzeppelin-solidity'
+    ];
     const extract = ['MetaCoin', 'ConvertLib'];
-    const node = new GanacheNode({ path: contractsPath, extract });
+    const node = new GanacheNode({ path: contractsPath, copy, extract });
     let server;
 
     before(async () => {
