@@ -61,6 +61,10 @@ class GanacheNode extends EventEmitter {
         return this._asyncGetter('_web3');
     }
 
+    get accounts() {
+        return this._asyncGetter('_accounts');
+    }
+
     get publisher() {
         return this._asyncGetter('_publisher');
     }
@@ -79,6 +83,7 @@ class GanacheNode extends EventEmitter {
         this._contracts = {};
         this._addresses = {};
         this._web3 = {};
+        this._accounts = [];
         this._publisher = '';
         this._isInitializing = true;
 
@@ -146,6 +151,8 @@ class GanacheNode extends EventEmitter {
 
         // Create ganache network
         await this._createNetwork({
+            'total_accounts': 10,
+            defaultBalanceEther: 1000000,
             seed: this._networkName,
             gasLimit: this._config.gas,
             locked: false,
@@ -167,6 +174,7 @@ class GanacheNode extends EventEmitter {
     async _extractPublisherAddress() {
 
         const accounts = await this._web3.eth.getAccounts();
+        this._accounts = accounts;
         this._publisher = accounts[0];
         const networkId = await this._web3.eth.net.getId();
         this._config.networks[this._networkName] = {
