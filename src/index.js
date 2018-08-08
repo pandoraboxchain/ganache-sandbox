@@ -26,14 +26,26 @@ class GanacheNode extends EventEmitter {
 
     _asyncGetter(prop) {
         return new Promise((resolve, reject) => {
+            let self = this;
 
-            if (!this._isInitializing) {
-
-                return resolve(this[prop]);
+            function onError(err) {
+                self.removeListener('initialized', onInitialized);
+                reject(err);
             }
 
-            this.once('error', err => reject(err));
-            this.once('initialized', () => resolve(this[prop]));
+            function onInitialized() {
+                self.removeListener('error', onError);
+                resolve(self[prop]);
+            }
+
+            if (this._isInitializing) {
+
+                this.once('error', onError);
+                this.once('initialized', onInitialized);
+                return;
+            }
+
+            onInitialized();
         });
     }
 

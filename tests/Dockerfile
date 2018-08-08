@@ -1,4 +1,4 @@
-FROM node:9
+FROM node:10
 
 LABEL maintainer="kostysh@gmail.com"
 
@@ -11,13 +11,13 @@ COPY ./package.json /ganache-sandbox/package.json
 # Installing of dependencies
 WORKDIR /ganache-sandbox
 RUN npm i --silent && npm i \ 
-        @babel/cli@7.0.0-beta.47 \
-        @babel/core@7.0.0-beta.47 \
-        @babel/plugin-proposal-object-rest-spread@7.0.0-beta.47 \
-        @babel/plugin-syntax-object-rest-spread@7.0.0-beta.47 \
-        @babel/polyfill@7.0.0-beta.47 \
-        @babel/preset-env@7.0.0-beta.47 \
-        @babel/register@7.0.0-beta.47 \
+        @babel/cli@7.0.0-beta.56 \
+        @babel/core@7.0.0-beta.56 \
+        @babel/plugin-proposal-object-rest-spread@7.0.0-beta.56 \
+        @babel/plugin-syntax-object-rest-spread@7.0.0-beta.56 \
+        @babel/polyfill@7.0.0-beta.56 \
+        @babel/preset-env@7.0.0-beta.56 \
+        @babel/register@7.0.0-beta.56 \
         openzeppelin-solidity \
         mocha \
         mocha-lcov-reporter \
