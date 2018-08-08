@@ -93,6 +93,7 @@ class GanacheNode extends EventEmitter {
         this._extract = options.extract || [];
         this._logServer = options.log || false;
         this._timeout = options.timeout || 7000;
+        this._debug = options.debug || false;
         this._port = ganachePort++;
         this._networkName = Web3.utils.randomHex(4);// own network for each instance
         this._config = {};
@@ -173,7 +174,9 @@ class GanacheNode extends EventEmitter {
             defaultBalanceEther: 1000000,
             seed: this._networkName,
             gasLimit: this._config.gas,
+            allowUnlimitedContractSize: true,
             locked: false,
+            debug: this._debug,
             logger: {
                 log: this._logServer ? text => debug(`ServerLog: ${text}`) : () => {}
             },
