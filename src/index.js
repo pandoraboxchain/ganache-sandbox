@@ -27,13 +27,18 @@ class GanacheNode extends EventEmitter {
     _asyncGetter(prop) {
         return new Promise((resolve, reject) => {
             let self = this;
+            const timeout = setTimeout(() => {
+                reject(new Error(`Cannot get "${prop}". Timeout exceeded`));
+            }, 7000);
 
             function onError(err) {
+                clearTimeout(timeout);
                 self.removeListener('initialized', onInitialized);
                 reject(err);
             }
 
             function onInitialized() {
+                clearTimeout(timeout);
                 self.removeListener('error', onError);
                 resolve(self[prop]);
             }
