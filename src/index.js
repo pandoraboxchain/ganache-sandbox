@@ -93,6 +93,7 @@ class GanacheNode extends EventEmitter {
         this._extract = options.extract || [];
         this._logServer = options.log || false;
         this._timeout = options.timeout || 7000;
+        this._maxServers = options.maxServers || 10;
         this._debug = options.debug || false;
         this._port = ganachePort++;
         this._networkName = Web3.utils.randomHex(4);// own network for each instance
@@ -105,6 +106,11 @@ class GanacheNode extends EventEmitter {
         this._accounts = [];
         this._publisher = '';
         this._isInitializing = true;
+
+        if (Object.keys(ganacheServers).length > this._maxServers) {
+
+            throw new Error(`Defined maximum number of servers "${this._maxServers}" is exceeded`);
+        }
 
         this._init()
             .then(() => {
@@ -119,34 +125,37 @@ class GanacheNode extends EventEmitter {
 
     close(callback = () => {}) {
 
-        try {
+        setTimeout(() => {
 
-            ganacheServers[this._networkName].closed = true;
-            let totalClose = true;
+            try {
 
-            for (let key of Object.keys(ganacheServers)) {
-
-                if (ganacheServers[key] && !ganacheServers[key].closed) {
-
-                    totalClose = false;
-                    break;
-                }
-            }
-
-            if (totalClose) {
-
-                // we have to close server after all tests have been finished only
-                // so send a close event after all close methods have been called
+                ganacheServers[this._networkName].closed = true;
+                let totalClose = true;
+    
                 for (let key of Object.keys(ganacheServers)) {
-
-                    ganacheServers[key].server.close();
+    
+                    if (ganacheServers[key] && !ganacheServers[key].closed) {
+    
+                        totalClose = false;
+                        break;
+                    }
                 }
+    
+                if (totalClose) {
+    
+                    // we have to close server after all tests have been finished only
+                    // so send a close event after all close methods have been called
+                    for (let key of Object.keys(ganacheServers)) {
+    
+                        ganacheServers[key].server.close();
+                    }
+                }
+    
+                callback();
+            } catch(err) {
+                callback(err);
             }
-
-            callback();
-        } catch(err) {
-            callback(err);
-        }
+        }, this._maxServers * 1500);        
     }
 
     async _init() {
@@ -245,8 +254,6 @@ class GanacheNode extends EventEmitter {
 
                 // web3 setup
                 this._web3 = new Web3(this._provider);
-
-                console.log('ganache!!!!', this._provider.connection.readyState, this._provider.connection.OPEN)
 
                 if (this._provider.connection.readyState !== this._provider.connection.OPEN) {
 
