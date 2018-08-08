@@ -29,7 +29,7 @@ class GanacheNode extends EventEmitter {
             let self = this;
             const timeout = setTimeout(() => {
                 reject(new Error(`Cannot get "${prop}". Timeout exceeded`));
-            }, 7000);
+            }, this._timeout);
 
             function onError(err) {
                 clearTimeout(timeout);
@@ -92,6 +92,7 @@ class GanacheNode extends EventEmitter {
         this._copyPaths = options.copy || [];
         this._extract = options.extract || [];
         this._logServer = options.log || false;
+        this._timeout = options.timeout || 7000;
         this._port = ganachePort++;
         this._networkName = Web3.utils.randomHex(4);// own network for each instance
         this._config = {};
@@ -227,7 +228,8 @@ class GanacheNode extends EventEmitter {
 
                 this._provider = new Web3.providers.WebsocketProvider(`ws://0.0.0.0:${this._port}`);                
                 this._provider.isMetaMask = true;
-                                
+                
+                this._provider.on('error', reject);
                 this._provider.on('connect', () => this._extractPublisherAddress()
                     .then(resolve)
                     .catch(reject));
