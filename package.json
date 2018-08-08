@@ -1,6 +1,6 @@
 {
   "name": "ganache-sandbox",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Utility for creating a sandbox with contracts for testing purposes",
   "private": true,
   "main": "src/index.js",
@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/pandoraboxchain/pyrrha-js",
   "dependencies": {
-    "debug": "^3.1.0",
-    "fs-extra": "^7.0.0",
-    "ganache-cli": "^7.0.0-beta.0",
-    "truffle-core": "^4.1.13",
+    "debug": "3.1.0",
+    "fs-extra": "7.0.0",
+    "ganache-cli": "6.1.6",
+    "truffle-core": "4.1.13",
     "web3": "1.0.0-beta.34"
   },
   "devDependencies": {

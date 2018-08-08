@@ -215,23 +215,18 @@ class GanacheNode extends EventEmitter {
                     return reject(err);
                 }
 
-                this._provider = new Web3.providers.WebsocketProvider(`ws://0.0.0.0:${this._port}`);                
-                this._provider.isMetaMask = true;
-                
                 // due to the current version of WebsocketProvider provider where this method is missed 
                 // this issue will be fixed in the future releases of web3
-                if (typeof this._provider.sendAsync !== 'function') {
+                // https://github.com/ethereum/web3.js/issues/1119
+                Web3.providers.WebsocketProvider.prototype.sendAsync = Web3.providers.WebsocketProvider.prototype.send;
 
-                    this._provider.sendAsync = this._provider.send;
-                }                
-
-                this._web3 = new Web3();
-                
+                this._provider = new Web3.providers.WebsocketProvider(`ws://0.0.0.0:${this._port}`);                
+                this._provider.isMetaMask = true;
+                                
                 this._provider.on('connect', () => this._extractPublisherAddress()
                     .then(resolve)
                     .catch(reject));
-
-                this._web3.setProvider(this._provider);               
+                this._web3 = new Web3(this._provider);
             });
             
             ganacheServers[this._networkName] = {
