@@ -230,13 +230,21 @@ class GanacheNode extends EventEmitter {
                 Web3.providers.WebsocketProvider.prototype.sendAsync = Web3.providers.WebsocketProvider.prototype.send;
 
                 this._provider = new Web3.providers.WebsocketProvider(`ws://0.0.0.0:${this._port}`);                
-                this._provider.isMetaMask = true;
-                
+                this._provider.isMetaMask = true;                                
                 this._provider.on('error', reject);
-                this._provider.on('connect', () => this._extractPublisherAddress()
-                    .then(resolve)
-                    .catch(reject));
+
+                // web3 setup
                 this._web3 = new Web3(this._provider);
+
+                if (this._provider.connection.readyState !== this._provider.connection.OPEN) {
+
+                    this._provider.on('connect', () => this._extractPublisherAddress()
+                        .then(resolve)
+                        .catch(reject));
+                } else {
+
+                    resolve(this);
+                }
             });
             
             ganacheServers[this._networkName] = {
