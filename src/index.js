@@ -19,7 +19,7 @@ const Contracts = require('truffle-workflow-compile');
 const Migrate = require('truffle-migrate');
 const ganache = require('ganache-cli');
 
-let ganachePort = 8545;
+let ganachePort = 1111;
 let ganacheServers = {};
 
 class GanacheNode extends EventEmitter {
