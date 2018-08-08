@@ -205,7 +205,7 @@ class GanacheNode extends EventEmitter {
 
                 if (this._logServer) {
 
-                    debug(`Servers has been closed due to error: ${err}`);
+                    debug(`Server has been closed due to error: ${err}`);
                 }
             }));            
             this._server.listen(this._port, err => {
@@ -215,7 +215,7 @@ class GanacheNode extends EventEmitter {
                     return reject(err);
                 }
 
-                this._provider = new Web3.providers.WebsocketProvider(`ws://localhost:${this._port}`);                
+                this._provider = new Web3.providers.WebsocketProvider(`ws://0.0.0.0:${this._port}`);                
                 this._provider.isMetaMask = true;
                 
                 // due to the current version of WebsocketProvider provider where this method is missed 
@@ -225,10 +225,13 @@ class GanacheNode extends EventEmitter {
                     this._provider.sendAsync = this._provider.send;
                 }                
 
-                this._web3 = new Web3(this._provider);
-                this._extractPublisherAddress()
+                this._web3 = new Web3();
+                
+                this._provider.on('connect', () => this._extractPublisherAddress()
                     .then(resolve)
-                    .catch(reject);
+                    .catch(reject));
+
+                this._web3.setProvider(this._provider);               
             });
             
             ganacheServers[this._networkName] = {
