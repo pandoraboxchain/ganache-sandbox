@@ -210,14 +210,24 @@ class GanacheNode extends EventEmitter {
     _createNetwork(networkConfig) {
         return new Promise((resolve, reject) => {
             this._server = ganache.server(networkConfig);
-            this.once('error', err => this._server.close(() => {
+            
+            ganacheServers[this._networkName] = {
+                server: this._server,
+                closed: false
+            };
+
+            const onError = err => this._server.close(() => {
 
                 if (this._logServer) {
 
                     debug(`Server has been closed due to error: ${err}`);
                 }
-            }));            
+            });
+
+            this.once('error', onError);
+            
             this._server.listen(this._port, err => {
+                this.removeListener('error', onError);
 
                 if (err) {
 
@@ -236,6 +246,8 @@ class GanacheNode extends EventEmitter {
                 // web3 setup
                 this._web3 = new Web3(this._provider);
 
+                console.log('ganache!!!!', this._provider.connection.readyState, this._provider.connection.OPEN)
+
                 if (this._provider.connection.readyState !== this._provider.connection.OPEN) {
 
                     this._provider.on('connect', () => this._extractPublisherAddress()
@@ -246,11 +258,6 @@ class GanacheNode extends EventEmitter {
                     resolve(this);
                 }
             });
-            
-            ganacheServers[this._networkName] = {
-                server: this._server,
-                closed: false
-            };
         });
     }
 
