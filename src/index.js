@@ -261,6 +261,7 @@ class GanacheNode extends EventEmitter {
                     this._provider.on('connect', () => this._extractPublisherAddress()
                         .then(() => {
                             clearTimeout(timeout);
+                            console.log('Web3 connected via websocket');
                             resolve(this);
                         })
                         .catch(reject));
