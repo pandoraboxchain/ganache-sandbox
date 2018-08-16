@@ -256,9 +256,13 @@ class GanacheNode extends EventEmitter {
                 this._web3 = new Web3(this._provider);
 
                 if (this._provider.connection.readyState !== this._provider.connection.OPEN) {
+                    const timeout = setTimeout(() => reject(new Error('Connection timeout exceeded')), 7000);
 
                     this._provider.on('connect', () => this._extractPublisherAddress()
-                        .then(resolve)
+                        .then(() => {
+                            clearTimeout(timeout);
+                            resolve(this);
+                        })
                         .catch(reject));
                 } else {
 
