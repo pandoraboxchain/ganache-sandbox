@@ -116,7 +116,7 @@ class GanacheNode extends EventEmitter {
             .then(() => {
                 this._isInitializing = false;
 
-                debug('Ganache sandbox initialized');
+                debug('Ganache server initialized');
 
                 this.emit('initialized', this);
             })
@@ -207,7 +207,7 @@ class GanacheNode extends EventEmitter {
         // Deploy contracts to the network
         await this._migrate();
 
-        debug('Migration done');
+        debug('Migrations done');
 
         return this;
     }
@@ -230,6 +230,7 @@ class GanacheNode extends EventEmitter {
     _createNetwork(networkConfig) {
         return new Promise((resolve, reject) => {
             this._server = ganache.server(networkConfig);
+            
             debug('Ganache server created');
             
             ganacheServers[this._networkName] = {
