@@ -106,6 +106,8 @@ class GanacheNode extends EventEmitter {
         this._accounts = [];
         this._publisher = '';
         this._isInitializing = true;
+        this._gasLimit = options.gas || 0x6691b7;
+        this._gasPrice = options.gasPrice || 20000000000;
 
         if (Object.keys(ganacheServers).length > this._maxServers) {
 
@@ -189,7 +191,8 @@ class GanacheNode extends EventEmitter {
             'total_accounts': 10,
             defaultBalanceEther: 1000000,
             seed: this._networkName,
-            gasLimit: this._config.gas,
+            gasLimit: this._gasLimit,
+            gasPrice: this._gasPrice,
             allowUnlimitedContractSize: true,
             locked: false,
             debug: this._debug,
