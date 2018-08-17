@@ -115,6 +115,9 @@ class GanacheNode extends EventEmitter {
         this._init()
             .then(() => {
                 this._isInitializing = false;
+
+                debug('Ganache sandbox initialized');
+
                 this.emit('initialized', this);
             })
             .catch(err => {
@@ -128,6 +131,8 @@ class GanacheNode extends EventEmitter {
         setTimeout(() => {
 
             try {
+
+                debug(`Ganache server "${this._networkName}" going to close`);
 
                 ganacheServers[this._networkName].closed = true;
                 let totalClose = true;
@@ -167,6 +172,8 @@ class GanacheNode extends EventEmitter {
         await fs.copy(path.join(this._basePath, 'contracts'), path.join(tempDir, 'contracts'));
         await fs.copy(path.join(this._basePath, 'migrations'), path.join(tempDir, 'migrations'));
 
+        debug('Contracts-sandbox files copied');
+
         // Copy additional paths to the sadndbox
         let copies = this._copyPaths.map(p => fs.copy(path.join(this._basePath, p), path.join(tempDir, p)));
         await Promise.all(copies);
@@ -192,11 +199,15 @@ class GanacheNode extends EventEmitter {
             ws: true
         });
 
+        debug('Network created');
+
         // Compile contracts
         await this._compile();
 
         // Deploy contracts to the network
         await this._migrate();
+
+        debug('Migration done');
 
         return this;
     }
@@ -219,6 +230,7 @@ class GanacheNode extends EventEmitter {
     _createNetwork(networkConfig) {
         return new Promise((resolve, reject) => {
             this._server = ganache.server(networkConfig);
+            debug('Ganache server created');
             
             ganacheServers[this._networkName] = {
                 server: this._server,
@@ -261,12 +273,13 @@ class GanacheNode extends EventEmitter {
                     this._provider.on('connect', () => this._extractPublisherAddress()
                         .then(() => {
                             clearTimeout(timeout);
-                            console.log('Web3 connected via websocket');
+                            debug('Web3 connected via websocket (connect)');
                             resolve(this);
                         })
                         .catch(reject));
                 } else {
 
+                    debug('Web3 connected via websocket');
                     resolve(this);
                 }
             });
@@ -287,7 +300,10 @@ class GanacheNode extends EventEmitter {
                     return reject(err);
                 }
 
-                this._contracts = contracts;        
+                this._contracts = contracts;   
+                
+                debug('Contracts compiled');
+                
                 resolve();
             });    
         });
