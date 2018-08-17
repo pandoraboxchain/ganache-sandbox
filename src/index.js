@@ -207,8 +207,6 @@ class GanacheNode extends EventEmitter {
         // Deploy contracts to the network
         await this._migrate();
 
-        debug('Migrations done');
-
         return this;
     }
 
@@ -230,7 +228,7 @@ class GanacheNode extends EventEmitter {
     _createNetwork(networkConfig) {
         return new Promise((resolve, reject) => {
             this._server = ganache.server(networkConfig);
-            
+
             debug('Ganache server created');
             
             ganacheServers[this._networkName] = {
@@ -274,13 +272,13 @@ class GanacheNode extends EventEmitter {
                     this._provider.on('connect', () => this._extractPublisherAddress()
                         .then(() => {
                             clearTimeout(timeout);
-                            debug('Web3 connected via websocket (connect)');
+                            debug('Web3 connected to websocket (connect)');
                             resolve(this);
                         })
                         .catch(reject));
                 } else {
 
-                    debug('Web3 connected via websocket');
+                    debug('Web3 connected to websocket');
                     resolve(this);
                 }
             });
@@ -318,24 +316,39 @@ class GanacheNode extends EventEmitter {
             Migrate.run(this._config.with({
                 logger: {
                     log: text => {
-                        text = String(text).trim();
 
-                        this._extract.forEach(name => {
-                           
-                            if (new RegExp(`${name}:`).test(text)) {
-                        
-                                let keyVal = text.split(':');
-                                this._addresses[keyVal[0].trim()] = keyVal[1].trim();
-                            }
-                        });
+                        try {
+
+                            debug(`Migration: ${text}`);
+
+                            text = String(text).trim();
+
+                            this._extract.forEach(name => {
+                            
+                                if (new RegExp(`${name}:`).test(text)) {
+                            
+                                    let keyVal = text.split(':');
+                                    this._addresses[keyVal[0].trim()] = keyVal[1].trim();
+                                }
+                            });
+
+                        } catch (err) {
+
+                            debug(`Error ocurred during migrations in logger: ${err.toString()}`);
+                            reject(err);
+                        }
                     }
                 }
             }), err => {
         
                 if (err) {
+
+                    debug(`Error ocurred during migrations: ${err.toString()}`);
         
                     return reject(err);
                 }
+
+                debug('Migrations done');
         
                 resolve();
             });    
