@@ -11,13 +11,13 @@ COPY ./package.json /ganache-sandbox/package.json
 # Installing of dependencies
 WORKDIR /ganache-sandbox
 RUN npm i --silent && npm i \ 
-        @babel/cli@7.0.0-beta.56 \
-        @babel/core@7.0.0-beta.56 \
-        @babel/plugin-proposal-object-rest-spread@7.0.0-beta.56 \
-        @babel/plugin-syntax-object-rest-spread@7.0.0-beta.56 \
-        @babel/polyfill@7.0.0-beta.56 \
-        @babel/preset-env@7.0.0-beta.56 \
-        @babel/register@7.0.0-beta.56 \
+        @babel/cli \
+        @babel/core \
+        @babel/plugin-proposal-object-rest-spread \
+        @babel/plugin-syntax-object-rest-spread \
+        @babel/polyfill \
+        @babel/preset-env \
+        @babel/register \
         openzeppelin-solidity \
         mocha \
         mocha-lcov-reporter \

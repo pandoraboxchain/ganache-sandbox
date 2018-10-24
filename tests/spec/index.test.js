@@ -1,10 +1,9 @@
-'use strict';
+import path from 'path';
+import { expect } from 'chai';
+import Web3 from 'web3';
+import GanacheNode from'../../src';
 
-const path = require('path');
-const { expect } = require('chai');
-const Web3 = require('web3');
 const { providers: { WebsocketProvider } } = Web3;
-const GanacheNode = require('../../src');
 
 describe('Ganache sandbox tests:', () => {
 
