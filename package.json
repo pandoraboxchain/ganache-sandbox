@@ -9,7 +9,9 @@
     "pretest": "npm run test:build",
     "pretest-with-coverage": "npm run test:build",
     "test": "docker run --rm -e WITH_COVERAGE=0 -it ganache_sandbox_tests",
-    "test-with-coverage": "docker run -e WITH_COVERAGE=1 -it ganache_sandbox_tests"
+    "test-with-coverage": "docker run -e WITH_COVERAGE=1 -it ganache_sandbox_tests",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -24,12 +26,14 @@
     "fs-extra": "7.0.0",
     "ganache-cli": "6.1.8",
     "truffle-core": "4.1.14",
-    "web3": "1.0.0-beta.36"
+    "web3": "1.0.0-beta.36",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "eslint": "5.7.0"
   },
   "sideEffects": false,
   "author": "Kostiantyn Smyrnov <kostysh@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "snyk": true
 }
